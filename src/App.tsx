@@ -260,7 +260,7 @@ function HomePage() {
         <div className="mb-6">
           <h3 className="text-xl font-semibold md:text-2xl">Our Rovers</h3>
           <p className="mt-2 text-neutral-300">
-            We’ve built two generations so far. Meet <span className="font-semibold">Legacy</span> and
+            We've built two generations so far. Meet <span className="font-semibold">Legacy</span> and
             <span className="font-semibold"> Venom</span>.
           </p>
         </div>
@@ -370,7 +370,7 @@ function ExposPage() {
             <p className="mt-2 text-neutral-300 max-w-3xl">
               Participated with Sabancı University IMC (SUIMC). We exhibited the Legacy rover and introduced our new
               prototype. We met with major companies such as Altınay and TUSAŞ, presented our architecture, and
-              discussed potential collaborations. As one of Turkey’s largest defense & aerospace fairs, SAHA EXPO 2024
+              discussed potential collaborations. As one of Turkey's largest defense & aerospace fairs, SAHA EXPO 2024
               provided high visibility and networking across industry and academia.
             </p>
             <img src={EXPO_IMAGES.saha} alt="SAHA EXPO 2024" className="mt-4 w-full rounded-2xl shadow-2xl" />
@@ -498,17 +498,15 @@ function ProgramsPage() {
 
 // -------------------------- TEAM PAGE ---------------------------------------
 function TeamPage() {
-  // Email obfuscation to prevent bot scraping
-  const domain = "surover.org";
   const CAPTAINS = [
     {
       name: "Mahmut",
-      emailUser: "mahmut",
+      email: "mahmut@surover.org",
       img: "https://images.unsplash.com/photo-1599566150163-29194dcaad36?q=80&w=400&h=400&fit=crop&auto=format",
     },
     {
       name: "Barış Bakırdöven",
-      emailUser: "baris",
+      email: "baris@surover.org",
       img: "https://images.unsplash.com/photo-1607746882042-944635dfe10e?q=80&w=400&h=400&fit=crop&auto=format",
     },
   ];
@@ -543,18 +541,15 @@ function TeamPage() {
         <section className="mt-8">
           <h2 className="text-2xl font-semibold mb-4">Team Captains</h2>
           <div className="grid gap-6 sm:grid-cols-2">
-            {CAPTAINS.map((c) => {
-              const email = `${c.emailUser}@${domain}`;
-              return (
-                <div key={email} className="rounded-3xl border border-neutral-800 bg-neutral-900/50 p-5 flex items-center gap-4">
-                  <img src={c.img} alt={c.name} className="h-20 w-20 rounded-full object-cover" />
-                  <div>
-                    <div className="text-lg font-semibold">{c.name}</div>
-                    <a href={`mailto:${email}`} className="text-sm text-neutral-300 hover:underline">{email}</a>
-                  </div>
+            {CAPTAINS.map((c) => (
+              <div key={c.email} className="rounded-3xl border border-neutral-800 bg-neutral-900/50 p-5 flex items-center gap-4">
+                <img src={c.img} alt={c.name} className="h-20 w-20 rounded-full object-cover" />
+                <div>
+                  <div className="text-lg font-semibold">{c.name}</div>
+                  <a href={`mailto:${c.email}`} className="text-sm text-neutral-300 hover:underline">{c.email}</a>
                 </div>
-              );
-            })}
+              </div>
+            ))}
           </div>
         </section>
 
