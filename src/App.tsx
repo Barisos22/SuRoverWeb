@@ -1,7 +1,7 @@
 import React, { useRef, useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Play, Pause, ChevronRight, Instagram, Linkedin, Youtube } from "lucide-react";
-//import heroVideo from "./assets/videos/surovervenom2.mp4";
+import heroVideo from "./assets/videos/surovervenom2.mp4";
 
 // ------------------------------ Minimal Button (self-contained for preview) -----------------
 function Button({
@@ -36,7 +36,7 @@ function Button({
 }
 
 // ------------------------------ ASSETS ---------------------------------------
-const HERO_VIDEO = "https://cdn.coverr.co/videos/coverr-nasa-mission-control-7857/1080p.mp4"; // placeholder
+const HERO_VIDEO = heroVideo; // placeholder
 const TEAM_PHOTO =
   "https://images.unsplash.com/photo-1551836022-d5d88e9218df?q=80&w=1600&auto=format&fit=crop"; // placeholder
 const LEGACY_IMG =
