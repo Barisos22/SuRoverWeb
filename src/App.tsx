@@ -1,7 +1,7 @@
 import React, { useRef, useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Play, Pause, ChevronRight, Instagram, Linkedin, Youtube } from "lucide-react";
-import heroVideo from "./assets/videos/surovervenom2.mp4";
+//import heroVideo from "./assets/videos/surovervenom2.mp4";
 
 // ------------------------------ Minimal Button (self-contained for preview) -----------------
 function Button({
