@@ -1,7 +1,15 @@
 import React, { useRef, useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Play, Pause, ChevronRight, Instagram, Linkedin, Youtube } from "lucide-react";
+import { Play, Pause, Instagram, Linkedin, Youtube, Award, Users, Calendar, Target, Github, FileText, Mail, Menu, X } from "lucide-react";
 import heroVideo from "./assets/videos/surovervenom2.mp4";
+import venomImg from "./assets/images/venom.jpg";
+import legacyImg from "./assets/images/legacy1.jpeg";
+import teamPhoto from "./assets/images/team.JPG";
+import sahaimg from "./assets/images/saha.JPG";
+import idefimg from "./assets/images/IDEF.JPG";
+import sponsimg from "./assets/images/sponsor.png";
+import mahmut from "./assets/images/Mahmut.JPG";
+import baris from "./assets/images/Baris.jpg";
 
 // ------------------------------ Minimal Button (self-contained for preview) -----------------
 function Button({
@@ -37,26 +45,22 @@ function Button({
 
 // ------------------------------ ASSETS ---------------------------------------
 const HERO_VIDEO = heroVideo; // placeholder
-const TEAM_PHOTO =
-  "https://images.unsplash.com/photo-1551836022-d5d88e9218df?q=80&w=1600&auto=format&fit=crop"; // placeholder
-const LEGACY_IMG =
-  "https://images.unsplash.com/photo-1542051841857-5f90071e7989?q=80&w=1200&auto=format&fit=crop"; // placeholder
-const VENOM_IMG =
-  "https://images.unsplash.com/photo-1518770660439-4636190af475?q=80&w=1200&auto=format&fit=crop"; // placeholder
+const TEAM_PHOTO = teamPhoto; // placeholder
+const LEGACY_IMG = legacyImg; // placeholder
+const VENOM_IMG = venomImg; // placeholder
 const EXPO_IMAGES = {
-  saha: "https://images.unsplash.com/photo-1581091215367-59ab6c3b83b1?q=80&w=1600&auto=format&fit=crop",
-  idef: "https://images.unsplash.com/photo-1581092334651-ddf26d9c7c1f?q=80&w=1600&auto=format&fit=crop",
+  saha: sahaimg,
+  idef: idefimg,
 };
-const SPONSOR_IMAGE =
-  "https://images.unsplash.com/photo-1520975922139-994804f9b2ea?q=80&w=1600&auto=format&fit=crop"; // preview-safe placeholder
+const SPONSOR_IMAGE = sponsimg // preview-safe placeholder
 
 // ------------------------------ NAV -----------------------------------------
 const NAV = [
-  { label: "Home", href: "#/home" },
-  { label: "Expos", href: "#/expos" },
-  { label: "Sponsors", href: "#/sponsors" },
-  { label: "Programs", href: "#/programs" },
-  { label: "Team", href: "#/team" },
+  { label: "About", href: "#about" },
+  { label: "Systems", href: "#systems" },
+  { label: "Partnerships", href: "#partnerships" },
+  { label: "Exhibitions", href: "#exhibitions" },
+  { label: "Team", href: "#team" },
 ];
 
 const SYSTEMS = [
@@ -135,6 +139,76 @@ function useHashRoute() {
   return hash;
 }
 
+// -------------------------- NAVIGATION COMPONENT -----------------------------
+function Navigation({ currentPath }: { currentPath?: string }) {
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+
+  return (
+    <header className="fixed top-0 z-50 w-full backdrop-blur supports-[backdrop-filter]:bg-neutral-900/60 border-b border-neutral-800/50">
+      <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-3">
+        <a href="#/home" className="text-xl font-semibold tracking-tight hover:text-emerald-400 transition-colors">
+          SuRover
+        </a>
+        
+        {/* Desktop Navigation */}
+        <nav className="hidden gap-6 md:flex">
+          {NAV.map((n) => (
+            <a 
+              key={n.label} 
+              href={n.href} 
+              className={`text-sm transition-colors ${
+                n.href === currentPath 
+                  ? 'text-emerald-400 font-medium' 
+                  : 'text-neutral-300 hover:text-white'
+              }`}
+            >
+              {n.label}
+            </a>
+          ))}
+        </nav>
+
+        {/* Mobile Menu Button */}
+        <button
+          onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+          className="md:hidden rounded-lg p-2 hover:bg-neutral-800 transition-colors"
+          aria-label="Toggle menu"
+        >
+          {mobileMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
+        </button>
+      </div>
+
+      {/* Mobile Navigation */}
+      <AnimatePresence>
+        {mobileMenuOpen && (
+          <motion.div
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: 'auto' }}
+            exit={{ opacity: 0, height: 0 }}
+            className="md:hidden border-t border-neutral-800 bg-neutral-900/95 backdrop-blur"
+          >
+            <nav className="flex flex-col px-4 py-3">
+              {NAV.map((n) => (
+                <a
+                  key={n.label}
+                  href={n.href}
+                  onClick={() => setMobileMenuOpen(false)}
+                  className={`py-3 text-sm transition-colors border-b border-neutral-800/50 last:border-0 ${
+                    n.href === currentPath 
+                      ? 'text-emerald-400 font-medium' 
+                      : 'text-neutral-300 hover:text-white'
+                  }`}
+                >
+                  {n.label}
+                </a>
+              ))}
+            </nav>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </header>
+  );
+}
+
 // -------------------------- HOME PAGE ----------------------------------------
 function HomePage() {
   const videoRef = useRef<HTMLVideoElement | null>(null);
@@ -142,36 +216,9 @@ function HomePage() {
   const [active, setActive] = useState(SYSTEMS[0].key);
   const activeSystem = SYSTEMS.find((s) => s.key === active)!;
 
-  useEffect(() => {
-    const v = videoRef.current;
-    if (!v) return;
-    const onTime = () => {
-      if (v.currentTime >= 30) {
-        v.pause();
-        setPlaying(false);
-      }
-    };
-    v.addEventListener("timeupdate", onTime);
-    return () => v.removeEventListener("timeupdate", onTime);
-  }, []);
-
   return (
     <div id="home" className="min-h-screen w-full bg-neutral-950 text-white">
-      {/* Top Nav */}
-      <header className="fixed top-0 z-50 w-full backdrop-blur supports-[backdrop-filter]:bg-neutral-900/60">
-        <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-3">
-          <a href="#/home" className="text-xl font-semibold tracking-tight">
-            SuRover
-          </a>
-          <nav className="hidden gap-6 md:flex">
-            {NAV.map((n) => (
-              <a key={n.label} href={n.href} className="text-sm hover:opacity-80 transition-opacity">
-                {n.label}
-              </a>
-            ))}
-          </nav>
-        </div>
-      </header>
+      <Navigation currentPath="#/home" />
 
       {/* HERO */}
       <section className="relative h-[88vh] w-full overflow-hidden">
@@ -182,27 +229,41 @@ function HomePage() {
           autoPlay
           muted
           playsInline
+          loop
         />
         <div className="absolute inset-0 bg-gradient-to-t from-neutral-950 via-neutral-950/30 to-transparent" />
         <div className="relative z-10 mx-auto flex h-full max-w-7xl flex-col justify-end px-4 pb-16">
+          <motion.div
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+            className="mb-3 inline-flex items-center gap-2 self-start rounded-full border border-emerald-500/30 bg-emerald-500/10 px-4 py-1.5 text-sm text-emerald-300"
+          >
+            <Award className="h-4 w-4" />
+            <span>Only Turkish Team • Maxon Young Engineers Programme</span>
+          </motion.div>
           <motion.h1
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
-            className="max-w-3xl text-4xl font-bold md:text-6xl"
+            className="max-w-3xl text-4xl font-bold md:text-6xl lg:text-7xl"
           >
-            ERC Opening Sequence — 30 Seconds of Vision
+            SuRover: Autonomous Planetary Exploration
           </motion.h1>
           <motion.p
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.7, delay: 0.1 }}
-            className="mt-3 max-w-2xl text-neutral-200"
+            className="mt-4 max-w-2xl text-lg text-neutral-200"
           >
-            Autonomy in tough terrain, precise manipulation, and a robust architecture. SuRover is a multidisciplinary
-            exploration platform developed through university–industry collaboration.
+            A research-grade autonomous rover platform combining advanced robotics, AI-driven navigation, and precision manipulation for challenging terrain exploration. Built through multidisciplinary collaboration.
           </motion.p>
-          <div className="mt-6 flex items-center gap-3">
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.2 }}
+            className="mt-6 flex flex-wrap items-center gap-3"
+          >
             <Button
               onClick={() => {
                 const v = videoRef.current;
@@ -219,29 +280,80 @@ function HomePage() {
             >
               {playing ? <Pause className="mr-2 h-4 w-4" /> : <Play className="mr-2 h-4 w-4" />} {playing ? "Pause" : "Play"}
             </Button>
-            <a href="#about" className="inline-flex items-center text-sm opacity-90 hover:opacity-100">
-              What is a rover? <ChevronRight className="ml-1 h-4 w-4" />
-            </a>
-          </div>
+          </motion.div>
+          
+          {/* Key Stats */}
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.9, delay: 0.3 }}
+            className="mt-8 grid grid-cols-2 gap-4 sm:grid-cols-4 max-w-3xl"
+          >
+            <div className="rounded-xl border border-neutral-700/50 bg-neutral-900/60 backdrop-blur-sm p-3">
+              <div className="text-2xl font-bold text-emerald-400">30+</div>
+              <div className="text-xs text-neutral-300">Team Members</div>
+            </div>
+            <div className="rounded-xl border border-neutral-700/50 bg-neutral-900/60 backdrop-blur-sm p-3">
+              <div className="text-2xl font-bold text-emerald-400">5</div>
+              <div className="text-xs text-neutral-300">Subsystems</div>
+            </div>
+            <div className="rounded-xl border border-neutral-700/50 bg-neutral-900/60 backdrop-blur-sm p-3">
+              <div className="text-2xl font-bold text-emerald-400">2</div>
+              <div className="text-xs text-neutral-300">Rover Generations</div>
+            </div>
+            <div className="rounded-xl border border-neutral-700/50 bg-neutral-900/60 backdrop-blur-sm p-3">
+              <div className="text-2xl font-bold text-emerald-400">20+</div>
+              <div className="text-xs text-neutral-300">Sponsors & Partners</div>
+            </div>
+          </motion.div>
         </div>
       </section>
 
       {/* ABOUT */}
-      <section id="about" className="mx-auto max-w-7xl px-4 py-16">
-        <div className="grid items-center gap-10 md:grid-cols-2">
+      <section id="about" className="mx-auto max-w-7xl px-4 py-20">
+        <div className="grid items-center gap-12 md:grid-cols-2">
           <div>
-            <h2 className="text-2xl font-semibold md:text-3xl">What is a rover?</h2>
-            <p className="mt-3 text-neutral-300">
-              Answer: an autonomous field robot that traverses challenging terrain, perceives its environment, makes
-              decisions, and executes tasks. SuRover is designed modularly for exploration, sample collection, and remote
-              operation scenarios.
+            <h2 className="text-3xl font-bold md:text-4xl">Research & Innovation</h2>
+            <p className="mt-4 text-lg leading-relaxed text-neutral-300">
+              SuRover is a <span className="font-semibold text-white">multidisciplinary research platform</span> developing autonomous planetary exploration systems for international competitions and real-world applications. Our work spans mechanical design, embedded systems, AI-driven autonomy, and precision manipulation.
             </p>
-            <div className="mt-6 flex flex-wrap gap-3 text-xs text-neutral-300">
-              <span className="rounded-full bg-neutral-800/70 px-3 py-1">4WS/4WD</span>
-              <span className="rounded-full bg-neutral-800/70 px-3 py-1">ROS2</span>
-              <span className="rounded-full bg-neutral-800/70 px-3 py-1">CAN Bus</span>
-              <span className="rounded-full bg-neutral-800/70 px-3 py-1">RTK GNSS</span>
-              <span className="rounded-full bg-neutral-800/70 px-3 py-1">ZED2 / LiDAR</span>
+            <p className="mt-3 text-neutral-300">
+              Through collaboration with <span className="font-semibold text-white">leading academic institutions and industry partners</span>, we advance the state of the art in field robotics while providing hands-on engineering experience for students pursuing graduate studies and research careers.
+            </p>
+            
+            {/* Research Focus Areas */}
+            <div className="mt-6 space-y-3">
+              <div className="flex items-start gap-3">
+                <div className="mt-1 h-2 w-2 rounded-full bg-emerald-400" />
+                <div>
+                  <div className="font-semibold text-white">Autonomous Navigation</div>
+                  <div className="text-sm text-neutral-400">Visual-Inertial SLAM, RTK GNSS fusion, trajectory planning</div>
+                </div>
+              </div>
+              <div className="flex items-start gap-3">
+                <div className="mt-1 h-2 w-2 rounded-full bg-emerald-400" />
+                <div>
+                  <div className="font-semibold text-white">Robotic Manipulation</div>
+                  <div className="text-sm text-neutral-400">6-DOF arm with FK/IK, EtherCAT control, precision sampling</div>
+                </div>
+              </div>
+              <div className="flex items-start gap-3">
+                <div className="mt-1 h-2 w-2 rounded-full bg-emerald-400" />
+                <div>
+                  <div className="font-semibold text-white">System Integration</div>
+                  <div className="text-sm text-neutral-400">ROS2 architecture, distributed computing, real-time control</div>
+                </div>
+              </div>
+            </div>
+            
+            <div className="mt-8 flex flex-wrap gap-2 text-xs text-neutral-300">
+              <span className="rounded-full border border-neutral-700 bg-neutral-800/70 px-3 py-1.5">ROS2 Humble</span>
+              <span className="rounded-full border border-neutral-700 bg-neutral-800/70 px-3 py-1.5">4WS/4WD Mechatronics</span>
+              <span className="rounded-full border border-neutral-700 bg-neutral-800/70 px-3 py-1.5">EtherCAT</span>
+              <span className="rounded-full border border-neutral-700 bg-neutral-800/70 px-3 py-1.5">RTK GNSS</span>
+              <span className="rounded-full border border-neutral-700 bg-neutral-800/70 px-3 py-1.5">ZED2 Camera</span>
+              <span className="rounded-full border border-neutral-700 bg-neutral-800/70 px-3 py-1.5">LiDAR SLAM</span>
+              <span className="rounded-full border border-neutral-700 bg-neutral-800/70 px-3 py-1.5">Gazebo Sim</span>
             </div>
           </div>
           <motion.img
@@ -251,7 +363,7 @@ function HomePage() {
             transition={{ duration: 0.6 }}
             src={TEAM_PHOTO}
             alt="Team photo"
-            className="aspect-video w-full rounded-2xl object-cover shadow-2xl"
+            className="aspect-video w-full rounded-2xl object-cover shadow-2xl ring-1 ring-white/10"
           />
         </div>
       </section>
@@ -267,14 +379,14 @@ function HomePage() {
         </div>
         <div className="grid gap-6 md:grid-cols-2">
           <figure className="overflow-hidden rounded-3xl border border-neutral-800 bg-neutral-900/50 p-3">
-            <img src={LEGACY_IMG} alt="Legacy rover" className="h-64 w-full rounded-2xl object-cover" />
+            <img src={LEGACY_IMG} alt="Legacy rover" className="h-96 w-full rounded-2xl object-cover object-[center_95%]" />
             <figcaption className="mt-3 px-1 text-sm text-neutral-300">
               <span className="font-medium">Legacy</span> — our first competition-ready platform; the base for early
               autonomy and manipulator experiments.
             </figcaption>
           </figure>
           <figure className="overflow-hidden rounded-3xl border border-neutral-800 bg-neutral-900/50 p-3">
-            <img src={VENOM_IMG} alt="Venom rover" className="h-64 w-full rounded-2xl object-cover" />
+            <img src={VENOM_IMG} alt="Venom rover" className="h-96 w-full rounded-2xl object-cover" />
             <figcaption className="mt-3 px-1 text-sm text-neutral-300">
               <span className="font-medium">Venom</span> — our latest rover with improved chassis stiffness, serviceability,
               and upgraded compute & sensing.
@@ -285,11 +397,11 @@ function HomePage() {
 
       {/* SYSTEMS (no detail pages, no 'See details') */}
       <section id="systems" className="mx-auto max-w-7xl px-4 pb-24">
-        <div className="mb-8 flex items-end justify-between">
-          <h3 className="text-xl font-semibold md:text-2xl">Systems</h3>
-          <a href="#/team" className="text-sm opacity-80 hover:opacity-100">
-            View all team members →
-          </a>
+        <div className="mb-8">
+          <h3 className="text-3xl font-bold md:text-4xl">Technical Systems</h3>
+          <p className="mt-3 max-w-3xl text-neutral-300">
+            Five integrated subsystems working in concert to deliver autonomous exploration capabilities.
+          </p>
         </div>
         <div className="grid gap-6 md:grid-cols-[260px,1fr]">
           <div className="flex flex-col gap-3">
@@ -330,282 +442,205 @@ function HomePage() {
         </div>
       </section>
 
-      <Footer />
-    </div>
-  );
-}
-
-// -------------------------- EXPOS PAGE ---------------------------------------
-function ExposPage() {
-  return (
-    <div className="min-h-screen w-full bg-neutral-950 text-white">
-      {/* HEADER */}
-      <header className="fixed top-0 z-50 w-full backdrop-blur supports-[backdrop-filter]:bg-neutral-900/60">
-        <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-3">
-          <a href="#/home" className="text-xl font-semibold tracking-tight">
-            SuRover
-          </a>
-          <nav className="hidden gap-6 md:flex">
-            {NAV.map((n) => (
-              <a
-                key={n.label}
-                href={n.href}
-                className={`text-sm transition-opacity ${n.href === "#/expos" ? "opacity-100" : "hover:opacity-80"}`}
-              >
-                {n.label}
-              </a>
-            ))}
-          </nav>
+      {/* PARTNERSHIPS & SUPPORT */}
+      <section id="partnerships" className="mx-auto max-w-7xl px-4 pb-16">
+        <div className="mb-8">
+          <h3 className="text-3xl font-bold md:text-4xl">Partnerships & Support</h3>
+          <p className="mt-3 max-w-3xl text-neutral-300">
+            Supported by leading national and international programs connecting our team with industry-grade resources, expert mentorship, and strategic partnerships.
+          </p>
         </div>
-      </header>
-
-      <main className="mx-auto max-w-6xl px-4 pt-28 pb-20">
-        <h1 className="text-3xl font-bold mb-10">Expos</h1>
-
-        <section className="mb-16">
-          <h2 className="text-2xl font-semibold mb-4">Participated Expos</h2>
-
-          {/* SAHA EXPO 2024 */}
-          <div className="mb-10">
-            <h3 className="text-xl font-semibold">SAHA EXPO 2024</h3>
-            <p className="mt-2 text-neutral-300 max-w-3xl">
-              Participated with Sabancı University IMC (SUIMC). We exhibited the Legacy rover and introduced our new
-              prototype. We met with major companies such as Altınay and TUSAŞ, presented our architecture, and
-              discussed potential collaborations. As one of Turkey's largest defense & aerospace fairs, SAHA EXPO 2024
-              provided high visibility and networking across industry and academia.
+        
+        <div className="grid gap-4 sm:grid-cols-2">
+          <div className="rounded-3xl border border-neutral-800 bg-neutral-900/50 p-6 shadow-xl">
+            <div className="flex items-start justify-between gap-4 mb-3">
+              <h4 className="text-xl font-semibold">Maxon Young Engineers Programme</h4>
+              <span className="whitespace-nowrap rounded-full bg-amber-400/10 px-3 py-1 text-xs text-amber-300 border border-amber-900/50">
+                Only Turkish Team
+              </span>
+            </div>
+            <p className="text-sm text-neutral-300">
+              Selected as Turkey's sole representative for this elite international engineering programme, receiving high-performance actuation systems and expert guidance for drivetrain and manipulator design.
             </p>
-            <img src={EXPO_IMAGES.saha} alt="SAHA EXPO 2024" className="mt-4 w-full rounded-2xl shadow-2xl" />
           </div>
+
+          <div className="rounded-3xl border border-neutral-800 bg-neutral-900/50 p-6">
+            <h4 className="text-xl font-semibold mb-3">TUSAŞ Student Project Support</h4>
+            <p className="text-sm text-neutral-300">
+              Industry collaboration enabling project logistics, visibility at major exhibitions, and technical mentorship from aerospace sector leaders.
+            </p>
+          </div>
+
+          <div className="rounded-3xl border border-neutral-800 bg-neutral-900/50 p-6">
+            <h4 className="text-xl font-semibold mb-3">T3 Foundation</h4>
+            <p className="text-sm text-neutral-300">
+              Student Project Teams Support Programme providing operational funding and ecosystem access for research and development.
+            </p>
+          </div>
+
+          <div className="rounded-3xl border border-neutral-800 bg-neutral-900/50 p-6">
+            <h4 className="text-xl font-semibold mb-3">TÜBİTAK Support</h4>
+            <p className="text-sm text-neutral-300">
+              National & international competition participation support through the 4001 programme, plus access to the National Technology Clubs Union network.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      {/* EXHIBITIONS */}
+      <section id="exhibitions" className="mx-auto max-w-7xl px-4 pb-16">
+        <div className="mb-8">
+          <h3 className="text-3xl font-bold md:text-4xl">Industry Exhibitions</h3>
+          <p className="mt-3 max-w-3xl text-neutral-300">
+            Strategic presence at major defense and aerospace exhibitions, showcasing our capabilities to industry leaders and establishing key partnerships.
+          </p>
+        </div>
+
+        <div className="grid gap-6 lg:grid-cols-2">
+          {/* SAHA EXPO 2024 */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="rounded-3xl border border-neutral-800 bg-neutral-900/50 overflow-hidden"
+          >
+            <img src={EXPO_IMAGES.saha} alt="SAHA EXPO 2024" className="w-full h-64 object-cover"/>
+            <div className="p-5">
+              <div className="flex items-center gap-2 mb-2">
+                <span className="text-sm font-medium text-emerald-400">2024</span>
+                <span className="text-neutral-500">•</span>
+                <span className="text-sm text-neutral-400">Istanbul</span>
+              </div>
+              <h4 className="text-xl font-semibold mb-2">SAHA EXPO 2024</h4>
+              <p className="text-sm text-neutral-300">
+                Exhibited with Sabancı University IMC, meeting with major companies like Altınay and TUSAŞ to discuss collaborations at Turkey's largest defense & aerospace fair.
+              </p>
+            </div>
+          </motion.div>
 
           {/* IDEF 2025 */}
-          <div className="mb-10">
-            <h3 className="text-xl font-semibold">IDEF 2025</h3>
-            <p className="mt-2 text-neutral-300 max-w-3xl">
-              Attended with TUSAŞ and showcased the Venom rover. We demonstrated the upgraded platform and established a
-              connection with TÜBİTAK Uzay. IDEF 2025 allowed us to present our latest vehicle to a broader audience and
-              strengthen strategic partnerships.
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ delay: 0.1 }}
+            className="rounded-3xl border border-neutral-800 bg-neutral-900/50 overflow-hidden"
+          >
+            <img src={EXPO_IMAGES.idef} alt="IDEF 2025" className="w-full h-64 object-cover" />
+            <div className="p-5">
+              <div className="flex items-center gap-2 mb-2">
+                <span className="text-sm font-medium text-emerald-400">2025</span>
+                <span className="text-neutral-500">•</span>
+                <span className="text-sm text-neutral-400">Istanbul</span>
+              </div>
+              <h4 className="text-xl font-semibold mb-2">IDEF 2025</h4>
+              <p className="text-sm text-neutral-300">
+                Showcased Venom rover with TUSAŞ, demonstrating upgraded capabilities and establishing strategic connection with TÜBİTAK Uzay.
+              </p>
+            </div>
+          </motion.div>
+        </div>
+
+        {/* Upcoming Events */}
+        <div className="mt-8 grid gap-4 sm:grid-cols-2">
+          <div className="rounded-2xl border border-neutral-800 bg-neutral-900/30 p-5">
+            <div className="text-sm font-medium text-emerald-400 mb-2">Upcoming • 2026</div>
+            <h4 className="text-lg font-semibold mb-2">IAC 2026 Antalya</h4>
+            <p className="text-sm text-neutral-300">
+              International space congress participation with TÜBİTAK Uzay.
             </p>
-            <img src={EXPO_IMAGES.idef} alt="IDEF 2025" className="mt-4 w-full rounded-2xl shadow-2xl" />
           </div>
-        </section>
 
-        <section>
-          <h2 className="text-2xl font-semibold mb-4">Upcoming Expos</h2>
-
-          <div className="mb-6">
-            <h3 className="text-xl font-semibold">IAC 2026 Antalya</h3>
-            <p className="mt-2 text-neutral-300 max-w-3xl">
-              Planned participation together with TÜBİTAK Uzay at an international space congress scale, highlighting the
-              research capability of our student–industry collaboration.
+          <div className="rounded-2xl border border-neutral-800 bg-neutral-900/30 p-5">
+            <div className="text-sm font-medium text-emerald-400 mb-2">Upcoming • 2026</div>
+            <h4 className="text-lg font-semibold mb-2">SAHA EXPO 2026</h4>
+            <p className="text-sm text-neutral-300">
+              Returning with next-generation rover and field demonstrations.
             </p>
           </div>
+        </div>
+      </section>
 
-          <div>
-            <h3 className="text-xl font-semibold">SAHA EXPO 2026</h3>
-            <p className="mt-2 text-neutral-300 max-w-3xl">
-              Returning with our next-generation rover prototype, focusing on improved mobility, autonomy, and
-              operations readiness for field demonstrations.
-            </p>
+      {/* TEAM */}
+      <section id="team" className="mx-auto max-w-7xl px-4 pb-16">
+        <div className="mb-8">
+          <h3 className="text-3xl font-bold md:text-4xl">Our Team</h3>
+          <p className="mt-3 max-w-3xl text-neutral-300">
+            Led by experienced captains coordinating 30+ members across five technical subsystems.
+          </p>
+        </div>
+
+        <div className="mb-8">
+          <h4 className="text-xl font-semibold mb-4 text-neutral-200">Team Captains</h4>
+          <div className="grid gap-6 sm:grid-cols-2 max-w-3xl">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              className="rounded-3xl border border-neutral-800 bg-neutral-900/50 p-5 flex items-center gap-4"
+            >
+              <img src={baris} alt="Barış Bakırdöven" className="h-20 w-20 rounded-full object-cover ring-2 ring-neutral-700" />
+              <div>
+                <div className="text-lg font-semibold">Barış Bakırdöven</div>
+                <a href="mailto:bbakirdoven@sabanciuniv.edu" className="text-sm text-neutral-400 hover:text-emerald-400 transition-colors">
+                  bbakirdoven@sabanciuniv.edu
+                </a>
+              </div>
+            </motion.div>
+
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: 0.1 }}
+              className="rounded-3xl border border-neutral-800 bg-neutral-900/50 p-5 flex items-center gap-4"
+            >
+              <img src={mahmut} alt="Mahmut Karaarslan" className="h-20 w-20 rounded-full object-cover ring-2 ring-neutral-700" />
+              <div>
+                <div className="text-lg font-semibold">Mahmut Karaarslan</div>
+                <a href="mailto:mahmut.karaarslan@sabanciuniv.edu" className="text-sm text-neutral-400 hover:text-emerald-400 transition-colors">
+                  mahmut.karaarslan@sabanciuniv.edu
+                </a>
+              </div>
+            </motion.div>
           </div>
-        </section>
-      </main>
+        </div>
 
-      <Footer />
-    </div>
-  );
-}
-
-// -------------------------- PROGRAMS PAGE ------------------------------------
-function ProgramsPage() {
-  const programs = [
-    {
-      name: "Maxon Young Engineers Programme",
-      note: "Only team selected from Turkey",
-    },
-    { name: "TUSAŞ Student Project Support Programme" },
-    { name: "T3 Foundation – Student Project Teams Support Programme" },
-    { name: "TÜBİTAK (4001) National & International Competition Participation Support" },
-    { name: "TÜBİTAK National Technology Clubs Union" },
-    { name: "Arduino Support Program" },
-  ];
-
-  return (
-    <div className="min-h-screen w-full bg-neutral-950 text-white">
-      <header className="fixed top-0 z-50 w-full backdrop-blur supports-[backdrop-filter]:bg-neutral-900/60">
-        <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-3">
-          <a href="#/home" className="text-xl font-semibold tracking-tight">
-            SuRover
-          </a>
-          <nav className="hidden gap-6 md:flex">
-            {NAV.map((n) => (
-              <a
-                key={n.label}
-                href={n.href}
-                className={`text-sm transition-opacity ${n.href === "#/programs" ? "opacity-100" : "hover:opacity-80"}`}
+        <div>
+          <h4 className="text-xl font-semibold mb-4 text-neutral-200">Subsystems</h4>
+          <div className="grid gap-4 sm:grid-cols-3 md:grid-cols-5">
+            {["Mechanics", "Software", "Electronics", "Science", "Management"].map((team, idx) => (
+              <motion.div
+                key={team}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: idx * 0.05 }}
+                className="rounded-2xl border border-neutral-800 bg-neutral-900/30 p-4 text-center"
               >
-                {n.label}
-              </a>
+                <div className="mx-auto h-12 w-12 rounded-full bg-neutral-800/60 mb-2" />
+                <div className="font-medium text-sm">{team}</div>
+              </motion.div>
             ))}
-          </nav>
+          </div>
         </div>
-      </header>
+      </section>
 
-      <main className="mx-auto max-w-6xl px-4 pt-28 pb-20">
-        <h1 className="text-3xl font-bold">Programs</h1>
-        <p className="mt-3 max-w-3xl text-neutral-300">
-          Supported by six national and international programs that accelerate our research, field-readiness, and student
-          growth. These partnerships connect our multidisciplinary team with industry-grade tooling, mentorship, and
-          competition pathways.
-        </p>
-
-        <section className="mt-10">
-          <div className="grid gap-4 sm:grid-cols-2">
-            {programs.map((p) => (
-              <div key={p.name} className="rounded-3xl border border-neutral-800 bg-neutral-900/50 p-5 shadow-2xl">
-                <div className="flex items-start justify-between gap-4">
-                  <h3 className="text-lg font-semibold">{p.name}</h3>
-                  {p.note && (
-                    <span className="whitespace-nowrap rounded-full bg-emerald-400/10 px-3 py-1 text-xs text-emerald-300 border border-emerald-900/50">
-                      {p.note}
-                    </span>
-                  )}
-                </div>
-                <p className="mt-2 text-sm text-neutral-300">
-                  Part of our ecosystem of support spanning sponsorship, hardware access, mentorship, and competition
-                  participation.
-                </p>
-              </div>
-            ))}
-          </div>
-
-          <div className="mt-10 rounded-3xl border border-neutral-800 bg-neutral-900/40 p-6">
-            <h4 className="text-base font-semibold">At a glance</h4>
-            <ul className="mt-3 grid gap-2 text-sm text-neutral-300 md:grid-cols-2">
-              <li className="rounded-lg bg-neutral-800/60 px-3 py-2">Maxon YEP: tooling, mentorship, expertise transfer</li>
-              <li className="rounded-lg bg-neutral-800/60 px-3 py-2">TUSAŞ: student project support and collaboration</li>
-              <li className="rounded-lg bg-neutral-800/60 px-3 py-2">T3: student teams funding & operations enablement</li>
-              <li className="rounded-lg bg-neutral-800/60 px-3 py-2">TÜBİTAK 4001: competition participation support</li>
-              <li className="rounded-lg bg-neutral-800/60 px-3 py-2">TÜBİTAK NT Clubs Union: community & resources</li>
-              <li className="rounded-lg bg-neutral-800/60 px-3 py-2">Arduino: hardware support for rapid prototyping</li>
-            </ul>
-          </div>
-        </section>
-      </main>
-
-      <Footer />
-    </div>
-  );
-}
-
-// -------------------------- TEAM PAGE ---------------------------------------
-function TeamPage() {
-  const CAPTAINS = [
-    {
-      name: "Mahmut",
-      email: "mahmut@surover.org",
-      img: "https://images.unsplash.com/photo-1599566150163-29194dcaad36?q=80&w=400&h=400&fit=crop&auto=format",
-    },
-    {
-      name: "Barış Bakırdöven",
-      email: "baris@surover.org",
-      img: "https://images.unsplash.com/photo-1607746882042-944635dfe10e?q=80&w=400&h=400&fit=crop&auto=format",
-    },
-  ];
-
-  const SUBTEAMS = [
-    { key: "mechanics", title: "Mechanics" },
-    { key: "software", title: "Software" },
-    { key: "electronics", title: "Electronics" },
-    { key: "science", title: "Science" },
-    { key: "management", title: "Management" },
-  ];
-
-  return (
-    <div className="min-h-screen w-full bg-neutral-950 text-white">
-      <header className="fixed top-0 z-50 w-full backdrop-blur supports-[backdrop-filter]:bg-neutral-900/60">
-        <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-3">
-          <a href="#/home" className="text-xl font-semibold tracking-tight">SuRover</a>
-          <nav className="hidden gap-6 md:flex">
-            {NAV.map((n) => (
-              <a key={n.label} href={n.href} className={`text-sm transition-opacity ${n.href === "#/team" ? "opacity-100" : "hover:opacity-80"}`}>
-                {n.label}
-              </a>
-            ))}
-          </nav>
+      {/* SPONSORS */}
+      <section id="sponsors" className="mx-auto max-w-7xl px-4 pb-24">
+        <div className="mb-8 text-center">
+          <h3 className="text-3xl font-bold md:text-4xl">Our Sponsors & Partners</h3>
+          <p className="mt-3 max-w-3xl mx-auto text-neutral-300">
+            Supported by 20+ leading institutions and companies advancing innovation in robotics and aerospace technology.
+          </p>
         </div>
-      </header>
-
-      <main className="mx-auto max-w-6xl px-4 pt-28 pb-20">
-        <h1 className="text-3xl font-bold">Team</h1>
-        <p className="mt-3 max-w-3xl text-neutral-300">Meet our captains and subteams powering SuRover.</p>
-
-        <section className="mt-8">
-          <h2 className="text-2xl font-semibold mb-4">Team Captains</h2>
-          <div className="grid gap-6 sm:grid-cols-2">
-            {CAPTAINS.map((c) => (
-              <div key={c.email} className="rounded-3xl border border-neutral-800 bg-neutral-900/50 p-5 flex items-center gap-4">
-                <img src={c.img} alt={c.name} className="h-20 w-20 rounded-full object-cover" />
-                <div>
-                  <div className="text-lg font-semibold">{c.name}</div>
-                  <a href={`mailto:${c.email}`} className="text-sm text-neutral-300 hover:underline">{c.email}</a>
-                </div>
-              </div>
-            ))}
-          </div>
-        </section>
-
-        <section className="mt-12">
-          <h2 className="text-2xl font-semibold mb-4">Subteams</h2>
-          <div className="grid gap-4 sm:grid-cols-2 md:grid-cols-3">
-            {SUBTEAMS.map((t) => (
-              <div key={t.key} className="rounded-3xl border border-neutral-800 bg-neutral-900/40 p-6 text-center">
-                <div className="mx-auto h-16 w-16 rounded-full bg-neutral-800/60 mb-3" />
-                <div className="font-semibold">{t.title}</div>
-                <p className="mt-1 text-xs text-neutral-400">Headshots and roster coming soon.</p>
-              </div>
-            ))}
-          </div>
-        </section>
-      </main>
-
-      <Footer />
-    </div>
-  );
-}
-
-// -------------------------- SPONSORS PAGE ------------------------------------
-
-function SponsorsPage() {
-  return (
-    <div className="min-h-screen w-full bg-neutral-950 text-white">
-      <header className="fixed top-0 z-50 w-full backdrop-blur supports-[backdrop-filter]:bg-neutral-900/60">
-        <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-3">
-          <a href="#/home" className="text-xl font-semibold tracking-tight">
-            SuRover
-          </a>
-          <nav className="hidden gap-6 md:flex">
-            {NAV.map((n) => (
-              <a
-                key={n.label}
-                href={n.href}
-                className={`text-sm transition-opacity ${n.href === "#/sponsors" ? "opacity-100" : "hover:opacity-80"}`}
-              >
-                {n.label}
-              </a>
-            ))}
-          </nav>
-        </div>
-      </header>
-
-      <main className="mx-auto max-w-5xl px-4 pt-28 pb-20 text-center">
-        <h1 className="text-3xl font-bold mb-4">Our Sponsors</h1>
-        <p className="text-neutral-300 mb-10 max-w-2xl mx-auto">
-          We are proud to be supported by leading institutions and companies who share our vision for innovation in
-          robotics and technology. Their collaboration empowers our students to push the limits of engineering and
-          exploration.
-        </p>
-        <img src={SPONSOR_IMAGE} alt="Sponsor logos" className="mx-auto w-full rounded-2xl shadow-2xl" />
-      </main>
+        <img
+          src={SPONSOR_IMAGE}
+          alt="Sponsors"
+          className="mx-auto w-full max-w-5xl object-contain mix-blend-lighten"
+          loading="lazy"
+        />
+      </section>
 
       <Footer />
     </div>
@@ -616,22 +651,62 @@ function SponsorsPage() {
 function Footer() {
   return (
     <section id="social" className="border-t border-neutral-800 bg-neutral-950/60">
-      <div className="mx-auto max-w-7xl px-4 py-10">
-        <div className="flex flex-col items-center justify-between gap-6 md:flex-row">
-          <p className="text-sm text-neutral-400">Follow us</p>
-          <div className="flex items-center gap-3">
-            <a href="https://instagram.com" className="rounded-full bg-neutral-800 p-2 hover:bg-neutral-700" aria-label="Instagram">
-              <Instagram className="h-5 w-5" />
-            </a>
-            <a href="https://linkedin.com" className="rounded-full bg-neutral-800 p-2 hover:bg-neutral-700" aria-label="LinkedIn">
-              <Linkedin className="h-5 w-5" />
-            </a>
-            <a href="https://youtube.com" className="rounded-full bg-neutral-800 p-2 hover:bg-neutral-700" aria-label="YouTube">
-              <Youtube className="h-5 w-5" />
-            </a>
+      <div className="mx-auto max-w-7xl px-4 py-12">
+        <div className="grid gap-8 md:grid-cols-3">
+          {/* About Column */}
+          <div>
+            <h3 className="text-lg font-semibold mb-3">SuRover</h3>
+            <p className="text-sm text-neutral-400 leading-relaxed">
+              An autonomous planetary exploration platform advancing field robotics through multidisciplinary engineering and research.
+            </p>
+          </div>
+          
+          {/* Quick Links */}
+          <div>
+            <h3 className="text-lg font-semibold mb-3">Quick Links</h3>
+            <div className="space-y-2">
+              {NAV.map((n) => (
+                <a key={n.label} href={n.href} className="block text-sm text-neutral-400 hover:text-white transition-colors">
+                  {n.label}
+                </a>
+              ))}
+            </div>
+          </div>
+          
+          {/* Contact & Social */}
+          <div>
+            <h3 className="text-lg font-semibold mb-3">Connect</h3>
+            <div className="space-y-3">
+              <a href="mailto:contact@surover.com" className="flex items-center gap-2 text-sm text-neutral-400 hover:text-white transition-colors">
+                <Mail className="h-4 w-4" />
+                <span>contact@surover.com</span>
+              </a>
+              <div className="flex items-center gap-3 pt-2">
+                <a href="https://instagram.com/surover" target="_blank" rel="noopener noreferrer" className="rounded-full bg-neutral-800 p-2 hover:bg-neutral-700 transition-colors" aria-label="Instagram">
+                  <Instagram className="h-5 w-5" />
+                </a>
+                <a href="https://linkedin.com/company/surover" target="_blank" rel="noopener noreferrer" className="rounded-full bg-neutral-800 p-2 hover:bg-neutral-700 transition-colors" aria-label="LinkedIn">
+                  <Linkedin className="h-5 w-5" />
+                </a>
+                <a href="https://youtube.com/@surover" target="_blank" rel="noopener noreferrer" className="rounded-full bg-neutral-800 p-2 hover:bg-neutral-700 transition-colors" aria-label="YouTube">
+                  <Youtube className="h-5 w-5" />
+                </a>
+                <a href="https://github.com/surover" target="_blank" rel="noopener noreferrer" className="rounded-full bg-neutral-800 p-2 hover:bg-neutral-700 transition-colors" aria-label="GitHub">
+                  <Github className="h-5 w-5" />
+                </a>
+              </div>
+            </div>
           </div>
         </div>
-        <div className="mt-6 text-center text-xs text-neutral-500">© {new Date().getFullYear()} SuRover • All rights reserved.</div>
+        
+        <div className="mt-8 pt-6 border-t border-neutral-800 flex flex-col sm:flex-row justify-between items-center gap-4">
+          <div className="text-xs text-neutral-500">
+            © {new Date().getFullYear()} SuRover Team • Sabancı University • All rights reserved.
+          </div>
+          <div className="text-xs text-neutral-500">
+            Built for research and innovation in autonomous robotics
+          </div>
+        </div>
       </div>
     </section>
   );
@@ -639,10 +714,6 @@ function Footer() {
 
 // ----------------------------- APP ROUTER ------------------------------------
 export default function App() {
-  const route = useHashRoute();
-  if (route.startsWith("/expos")) return <ExposPage />;
-  if (route.startsWith("/sponsors")) return <SponsorsPage />;
-  if (route.startsWith("/programs")) return <ProgramsPage />;
-  if (route.startsWith("/team")) return <TeamPage />;
+  // Single page application - always show HomePage
   return <HomePage />;
 }
