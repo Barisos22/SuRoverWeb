@@ -4,7 +4,7 @@ import { Play, Pause, Instagram, Linkedin, Youtube, Award, Users, Calendar, Targ
 import heroVideo from "./assets/videos/surovervenom2.mp4";
 import venomImg from "./assets/images/venom.jpg";
 import legacyImg from "./assets/images/legacy1.jpeg";
-import teamPhoto from "./assets/images/team.JPG";
+import teamPhoto from "./assets/images/team2.jpeg";
 import sahaimg from "./assets/images/saha.JPG";
 import idefimg from "./assets/images/IDEF.JPG";
 import sponsimg from "./assets/images/sponsor.png";
@@ -526,7 +526,7 @@ function HomePage() {
             transition={{ delay: 0.1 }}
             className="rounded-3xl border border-neutral-800 bg-neutral-900/50 overflow-hidden"
           >
-            <img src={EXPO_IMAGES.idef} alt="IDEF 2025" className="w-full h-64 object-cover" />
+            <img src={EXPO_IMAGES.idef} alt="IDEF 2025" className="w-full h-64 object-cover object-[center_51%]" />
             <div className="p-5">
               <div className="flex items-center gap-2 mb-2">
                 <span className="text-sm font-medium text-emerald-400">2025</span>
