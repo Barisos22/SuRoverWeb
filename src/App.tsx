@@ -36,7 +36,7 @@ function Button({
 }
 
 // ------------------------------ ASSETS ---------------------------------------
-const HERO_VIDEO = heroVideo;
+const HERO_VIDEO = "https://cdn.coverr.co/videos/coverr-nasa-mission-control-7857/1080p.mp4"; // placeholder
 const TEAM_PHOTO =
   "https://images.unsplash.com/photo-1551836022-d5d88e9218df?q=80&w=1600&auto=format&fit=crop"; // placeholder
 const LEGACY_IMG =
